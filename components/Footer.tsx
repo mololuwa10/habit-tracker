@@ -36,7 +36,7 @@ export default function Footer() {
 				>
 					{/* Modal Content */}
 					<div
-						className="bg-white rounded-lg p-6 w-full max-w-md transition-all transform ease-in duration-300 sm:max-w-sm lg:max-w-lg"
+						className="bg-white rounded-lg p-6 w-full transition-all transform ease-in duration-300 max-w-[90%] sm:max-w-[50%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[29%]"
 						onClick={(e) => e.stopPropagation()}
 					>
 						<button
