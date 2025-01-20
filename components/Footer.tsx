@@ -6,7 +6,7 @@ export default function Footer() {
 	return (
 		<>
 			<div className="flex justify-center py-4">
-				<Link href={"#"}>
+				<Link href={"/AddHabit"}>
 					<button className="bg-orange-400 hover:bg-orange-500 hover:scale-110 animation ease-in duration-200 text-white font-bold py-4 px-4 rounded-[2.0rem]">
 						<Plus />
 					</button>
