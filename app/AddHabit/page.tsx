@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
@@ -15,7 +16,7 @@ function getSessionId() {
 export default function AddHabit({
 	onHabitAdded,
 }: {
-	onHabitAdded: (habit: unknown) => void;
+	onHabitAdded: (habit: any) => void;
 }) {
 	const [habitName, setHabitName] = useState("");
 	const [loading, setLoading] = useState(false); // Track loading state
