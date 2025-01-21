@@ -76,21 +76,33 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Menu } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const initialHabits = [
-	{ id: 1, name: "Drink Water", streak: 5 },
-	{ id: 2, name: "Exercise", streak: 4 },
-	{ id: 3, name: "Meditate", streak: 3 },
-	{ id: 4, name: "Read a book", streak: 2 },
-];
+// const initialHabits = [
+// 	{ id: 1, name: "Drink Water", streak: 5 },
+// 	{ id: 2, name: "Exercise", streak: 4 },
+// 	{ id: 3, name: "Meditate", streak: 3 },
+// 	{ id: 4, name: "Read a book", streak: 2 },
+// ];
 
 export default function HabitsPage() {
-	const [habits, setHabits] = useState(initialHabits);
+	const [habits, setHabits] = useState<
+		{ id: number; name: string; streak: number }[]
+	>([]);
 
+	// Fetch habits from the database
+	const fetchHabits = async () => {
+		const response = await fetch(
+			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/addhabit"
+		);
+		const data = await response.json();
+		setHabits(data);
+	};
+
+	// Handle drag and drop
 	const handleDragEnd = (result: any) => {
 		if (!result.destination) return;
 
@@ -101,6 +113,14 @@ export default function HabitsPage() {
 		setHabits(reorderedItems);
 	};
 
+	// Add a new habit
+	// const handleHabitAdded = (newHabit: any) => {
+	// 	setHabits((prevHabits) => [...prevHabits, newHabit]);
+	// };
+
+	useEffect(() => {
+		fetchHabits(); // Fetch habits when the page loads
+	}, []);
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<div className="bg-gray-100 mx-auto max-w-[90%] sm:max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] px-4 py-10 mt-10 rounded-lg shadow-lg">
@@ -130,7 +150,9 @@ export default function HabitsPage() {
 											<p className="text-black font-semibold ml-4 flex-grow">
 												{habit.name}
 											</p>
-											<p className="text-black ml-16">Streak: {habit.streak}</p>
+											<p className="text-black ml-16">
+												Streak: {habit.streak || 0}
+											</p>
 											<div
 												{...provided.dragHandleProps}
 												className="cursor-pointer"

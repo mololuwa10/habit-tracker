@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import AddHabit from "@/app/AddHabit/page";
@@ -6,6 +7,9 @@ import React, { useState } from "react";
 
 export default function Footer() {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [habits, setHabits] = useState<
+		{ id: number; name: string; streak: number }[]
+	>([]);
 
 	const toggleModal = () => {
 		setIsModalOpen(!isModalOpen);
@@ -15,6 +19,10 @@ export default function Footer() {
 		if (e.target.id === "modal-backdrop") {
 			setIsModalOpen(false);
 		}
+	};
+
+	const handleHabitAdded = (newHabit: any) => {
+		setHabits((prevHabits) => [...prevHabits, newHabit]);
 	};
 
 	return (
@@ -45,7 +53,8 @@ export default function Footer() {
 						>
 							<X className="w-6 h-6" />
 						</button>
-						<AddHabit /> {/* Render the AddHabit component inside the modal */}
+						<AddHabit onHabitAdded={handleHabitAdded} />{" "}
+						{/* Render the AddHabit component inside the modal */}
 					</div>
 				</div>
 			)}
