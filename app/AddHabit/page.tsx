@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
@@ -13,11 +13,15 @@ function getSessionId() {
 	return sessionId;
 }
 
-export default function AddHabit({
-	onHabitAdded,
-}: {
-	onHabitAdded: (habit: any) => void;
-}) {
+// {
+// 	onHabitAdded,
+// 	onClose,
+// }: {
+// 	onHabitAdded: (habit: any) => void;
+// 	onClose: () => void;
+// }
+
+export default function AddHabit() {
 	const [habitName, setHabitName] = useState("");
 	const [loading, setLoading] = useState(false); // Track loading state
 	const [error, setError] = useState<string | null>(null);
@@ -29,7 +33,7 @@ export default function AddHabit({
 		setError(null);
 
 		const response = await fetch(
-			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/addhabit",
+			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/AddHabit",
 			{
 				method: "POST",
 				headers: {
@@ -46,9 +50,13 @@ export default function AddHabit({
 		}
 
 		const newHabit = await response.json(); // Expecting the response to include the saved habit
-		onHabitAdded(newHabit);
+		// onHabitAdded(newHabit);
 		setHabitName(""); // Clear input field
 		alert(`Habit "${newHabit.HabitName}" added successfully!`);
+
+		// Close the modal
+		// onClose();
+		setLoading(false);
 	};
 
 	return (
