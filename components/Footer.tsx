@@ -54,7 +54,7 @@ export default function Footer() {
 							<X className="w-6 h-6" />
 						</button>
 						{/* onHabitAdded={handleHabitAdded} onClose={toggleModal} */}
-						<AddHabit /> {/* Render the AddHabit component inside the modal */}
+						<AddHabit />
 					</div>
 				</div>
 			)}

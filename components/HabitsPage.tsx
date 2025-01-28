@@ -16,11 +16,17 @@ export default function HabitsPage() {
 			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/AddHabit"
 		);
 		const data = await response.json();
-		setHabits(data);
+		setHabits(
+			data.map((habit: any) => ({
+				id: habit.id,
+				habitName: habit.habitName,
+				streak: habit.streak,
+			}))
+		);
 	};
 
 	// Handle drag and drop
-	const handleDragEnd = (result: any) => {
+	const handleDragEnd = async (result: any) => {
 		if (!result.destination) return;
 
 		const reorderedItems = [...habits];
@@ -28,12 +34,24 @@ export default function HabitsPage() {
 		reorderedItems.splice(result.destination.index, 0, removed);
 
 		setHabits(reorderedItems);
-	};
 
-	// Add a new habit
-	// const handleHabitAdded = (newHabit: any) => {
-	// 	setHabits((prevHabits) => [...prevHabits, newHabit]);
-	// };
+		// Send the updated order to the backend
+		await fetch(
+			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/updatehabitorder",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(
+					reorderedItems.map((habit, index) => ({
+						id: habit.id,
+						order: index,
+					}))
+				),
+			}
+		);
+	};
 
 	useEffect(() => {
 		fetchHabits(); // Fetch habits when the page loads

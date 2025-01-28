@@ -1,18 +1,17 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 function getSessionId() {
 	let sessionId = localStorage.getItem("sessionId");
 	if (!sessionId) {
-		sessionId = crypto.randomUUID(); // Generates a unique identifier
+		sessionId = crypto.randomUUID();
 		localStorage.setItem("sessionId", sessionId);
 	}
 	return sessionId;
 }
-
 // {
 // 	onHabitAdded,
 // 	onClose,
@@ -20,10 +19,9 @@ function getSessionId() {
 // 	onHabitAdded: (habit: any) => void;
 // 	onClose: () => void;
 // }
-
 export default function AddHabit() {
 	const [habitName, setHabitName] = useState("");
-	const [loading, setLoading] = useState(false); // Track loading state
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const addHabit = async () => {
@@ -32,35 +30,47 @@ export default function AddHabit() {
 		setLoading(true);
 		setError(null);
 
-		const response = await fetch(
-			"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/AddHabit",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Session-Id": getSessionId(),
-				},
-				body: JSON.stringify({ habitName }),
+		try {
+			const response = await fetch(
+				"https://habittrackerfunctionapp-gwc7enc8f2ejb3a7.uksouth-01.azurewebsites.net/api/AddHabit",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Session-Id": getSessionId(),
+					},
+					body: JSON.stringify({ habitName }),
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Failed to add habit. Please try again.");
 			}
-		);
 
-		if (!response.ok) {
-			alert("Failed to add habit. Please try again.");
-			return;
+			const newHabit = await response.json();
+			// onHabitAdded(newHabit);
+			setHabitName("");
+			alert(`Habit "${newHabit.HabitName}" added successfully!`);
+			// onClose();
+		} catch (err) {
+			if (err instanceof Error) {
+				setError(err.message);
+			} else {
+				setError("An unknown error occurred.");
+			}
+			if (err instanceof Error) {
+				// alert(err.message);
+			} else {
+				alert("An unknown error occurred.");
+			}
+		} finally {
+			setLoading(false);
 		}
-
-		const newHabit = await response.json(); // Expecting the response to include the saved habit
-		// onHabitAdded(newHabit);
-		setHabitName(""); // Clear input field
-		alert(`Habit "${newHabit.HabitName}" added successfully!`);
-
-		// Close the modal
-		// onClose();
-		setLoading(false);
 	};
 
 	return (
 		<div className="bg-gray-100 max-w-screen-lg mx-auto px-8 py-10 mt-10 rounded-lg shadow-lg">
+			{/* {error && <div className="text-red-500">{error}</div>} */}
 			<div className="mb-4">
 				<label
 					htmlFor="habitname"
@@ -76,7 +86,6 @@ export default function AddHabit() {
 					className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				/>
 			</div>
-
 			<Button
 				onClick={addHabit}
 				disabled={loading}
